@@ -37,7 +37,29 @@ print(f'Model_path {opt.model_path}')
 
 # get model
 model = resnet50(num_classes=1)
-model.load_state_dict(torch.load(opt.model_path, map_location='cpu'), strict=True)
+from collections import OrderedDict
+from copy import deepcopy
+
+ckpt = torch.load(opt.model_path, map_location="cpu")
+
+# 1) 先取出真正的模型参数字典
+state_dict = ckpt.get("model", ckpt)
+
+# 2) 去掉可能的前缀（比如 "module." 或 "model."）
+new_state_dict = OrderedDict()
+for k, v in state_dict.items():
+    if k.startswith("module."):
+        new_k = k[len("module."):]
+    elif k.startswith("model."):
+        new_k = k[len("model."):]
+    else:
+        new_k = k
+    new_state_dict[new_k] = deepcopy(v)
+
+# 3) 再喂给 ResNet
+model.load_state_dict(new_state_dict, strict=True)
+print("Loaded weights from", opt.model_path)
+
 model.cuda()
 model.eval()
 

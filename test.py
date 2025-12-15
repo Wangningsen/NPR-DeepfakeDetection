@@ -23,28 +23,14 @@ def seed_torch(seed=1029):
     torch.backends.cudnn.enabled = False
 seed_torch(100)
 DetectionTests = {
-                'ForenSynths': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/ForenSynths/',
-                                 'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
-                               },
-
-           'GANGen-Detection': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/GANGen-Detection/',
-                                 'no_resize'  : True,
-                                 'no_crop'    : True,
-                               },
-
-         'DiffusionForensics': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/DiffusionForensics/',
-                                 'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
-                               },
-
-        'UniversalFakeDetect': { 'dataroot'   : '/opt/data/private/DeepfakeDetection/UniversalFakeDetect/',
-                                 'no_resize'  : False, # Due to the different shapes of images in the dataset, resizing is required during batch detection.
-                                 'no_crop'    : True,
-                               },
-
-                 }
-
+    'CVPJ_Val': {
+        # 注意: dataroot 是上一级目录, 下面再套一层 "ours"
+        'dataroot': '/data1/nwang60/datasets/NPR_ValForCVPJ/',
+        'no_resize': False,  # 你的图本来就是 256×256 的话可以设 True
+        'no_crop': True,
+    },
+}
+multiclass = [0]
 
 opt = TestOptions().parse(print_options=False)
 print(f'Model_path {opt.model_path}')
